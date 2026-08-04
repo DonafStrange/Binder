@@ -23,6 +23,9 @@ from PySide6.QtWidgets import (
 from PySide6.QtWebEngineWidgets import QWebEngineView
 #from PySide6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile
 from PySide6.QtGui import QDesktopServices
+from pygments import highlight
+from pygments.lexers import get_lexer_for_filename
+from pygments.formatters import HtmlFormatter
 
 from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
 
@@ -683,6 +686,82 @@ class MarkdownEditor(QWidget):
             text
         )
 
+    def replace_code_files(self, text):
+
+        import re
+
+
+        def replace(match):
+
+            code_path = match.group(1).strip()
+
+            if not self.current_file:
+                return match.group(0)
+
+
+            file_path = (
+                self.current_file.parent
+                / code_path
+            )
+
+
+            if not file_path.exists():
+                return (
+                    f"<b>Missing code file:</b> {code_path}"
+                )
+
+
+            try:
+
+                content = file_path.read_text(
+                    encoding="utf-8"
+                )
+
+                lexer = get_lexer_for_filename(
+                    file_path.name
+                )
+
+
+                formatter = HtmlFormatter(
+                    style="monokai"
+                )
+
+
+                highlighted = highlight(
+                    content,
+                    lexer,
+                    formatter
+                )
+
+
+                css = formatter.get_style_defs(
+                    ".highlight"
+                )
+
+            except Exception as e:
+
+                return (
+                    f"<b>Error reading code:</b> {e}"
+                )
+
+
+            return (
+                "\n\n"
+                f"<style>{css}</style>"
+                "<div class=\"code-box\">"
+                + highlighted +
+                "</div>"
+                "\n\n"
+            )
+
+
+        return re.sub(
+            r"```code-file\s+(.*?)```",
+            replace,
+            text,
+            flags=re.DOTALL
+        )
+
     # -------------------------------------------------
     # Markdown + LaTeX Preview
     # -------------------------------------------------
@@ -692,6 +771,7 @@ class MarkdownEditor(QWidget):
         text = self.editor.toPlainText()
 
         text = self.replace_citations(text)
+        text = self.replace_code_files(text)
 
 
         html_body = markdown.markdown(
@@ -800,6 +880,27 @@ background:#eeeeee;
 
 padding:10px;
 
+}}
+
+.code-box {{
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 12px;
+    border-radius: 8px;
+    max-height: 7.5em;
+    overflow-y: auto;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid #333;
+}}
+
+
+.code-box pre {{
+    margin: 0;
+    white-space: pre;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
 }}
 
 

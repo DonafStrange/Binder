@@ -79,8 +79,27 @@ Applications:
 - Epileptic activity
 - Pharmacological effects
 
+A Python implementation of this equation is:
 
----
+```python
+def dVdt(V, m, h, n, I,
+         Cm,
+         gNa, ENa,
+         gK, EK,
+         gL, EL):
+    """
+    Hodgkin–Huxley membrane equation
+    """
+
+    INa = gNa * (m**3) * h * (V - ENa)
+    IK  = gK * (n**4) * (V - EK)
+    IL  = gL * (V - EL)
+
+    dV = (I - INa - IK - IL) / Cm
+
+    return dV
+```
+
 
 # 2. Reduced Neuron Models
 

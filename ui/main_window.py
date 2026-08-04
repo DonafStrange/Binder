@@ -9,7 +9,8 @@ from PySide6.QtWidgets import (
     QLabel,
     QToolBar,
     QStatusBar,
-    QTabWidget
+    QTabWidget,
+    QScrollArea
 )
 
 from PySide6.QtGui import QAction
@@ -144,8 +145,18 @@ class MainWindow(QMainWindow):
         self.reference_properties = ReferenceProperties()
 
 
+        scroll = QScrollArea()
+
+        scroll.setWidgetResizable(
+            True
+        )
+
+        scroll.setWidget(
+            self.properties
+        )
+
         tabs.addTab(
-            self.properties,
+            scroll,
             "Properties"
         )
 

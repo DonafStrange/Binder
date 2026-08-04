@@ -146,6 +146,10 @@ class WorkService:
             exist_ok=True
         )
 
+        (folder/"codes").mkdir(
+            exist_ok=True
+        )
+
 
 
         note_file = folder/"note.md"

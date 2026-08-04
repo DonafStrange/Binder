@@ -14,10 +14,10 @@ from services.markdown_service import MarkdownService
 from services.reference_service import ReferenceService
 from PySide6.QtWidgets import QSizePolicy
 from services.work_service import WorkService
-
+import shutil
 
 from PySide6.QtWidgets import QListWidget
-
+from widgets.code_viewer import CodeViewer
 
 class TagListWidget(QListWidget):
 
@@ -203,7 +203,67 @@ class PropertiesPanel(QWidget):
             ref_box
         )
 
+        # ---------------- Codes ----------------
 
+        code_box = QGroupBox(
+            "Codes"
+        )
+
+        code_layout = QVBoxLayout()
+
+        self.codes = QListWidget()
+
+        self.codes.itemDoubleClicked.connect(
+            self.open_code
+        )
+
+        code_layout.addWidget(
+            self.codes
+        )
+
+        self.add_code_btn = QPushButton(
+            "Add Code"
+        )
+
+        self.add_code_btn.clicked.connect(
+            self.add_code
+        )
+
+        code_layout.addWidget(
+            self.add_code_btn
+        )
+
+        self.delete_code_btn = QPushButton(
+            "Delete Code"
+        )
+
+        self.delete_code_btn.clicked.connect(
+            self.delete_code
+        )
+
+        code_layout.addWidget(
+            self.delete_code_btn
+        )
+
+        self.insert_code_md_btn = QPushButton(
+            "Insert Code Link"
+        )
+
+        self.insert_code_md_btn.clicked.connect(
+            self.insert_code_reference
+        )
+
+        code_layout.addWidget(
+            self.insert_code_md_btn
+        )
+
+        code_box.setLayout(
+            code_layout
+        )
+
+        layout.addWidget(
+            code_box
+        )
 
         # ---------------- Attachments ----------------
 
@@ -340,6 +400,20 @@ class PropertiesPanel(QWidget):
                 str(ref)
             )
 
+        self.codes.clear()
+
+        code_folder = Path(work.folder) / "codes"
+
+        if code_folder.exists():
+
+            for file in sorted(code_folder.iterdir()):
+
+                if file.is_file():
+
+                    self.codes.addItem(
+                        file.name
+                    )
+
         # ---------------- Load attachments used in this work ----------------
 
         self.attachments.clear()
@@ -421,6 +495,154 @@ class PropertiesPanel(QWidget):
 
         self.referenceClicked.emit(
             int(reference_id)
+        )
+
+    def add_code(self):
+
+        from PySide6.QtWidgets import QFileDialog
+
+        filename, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Code File",
+            "",
+            (
+                "Code Files ("
+                "*.py "
+                "*.m "
+                "*.mlx "
+                "*.cpp "
+                "*.c "
+                "*.h "
+                "*.hpp "
+                "*.java "
+                "*.jl "
+                "*.R "
+                "*.sh "
+                "*.ipynb "
+                "*.json "
+                "*.yaml "
+                "*.yml "
+                "*.xml "
+                "*.sql"
+                ");;All Files (*)"
+            )
+        )
+
+        if not filename:
+            return
+
+        source = Path(filename)
+
+        code_folder = Path(
+            self.current_work.folder
+        ) / "codes"
+
+
+        code_folder.mkdir(
+            exist_ok=True
+        )
+
+
+        destination = code_folder / source.name
+
+
+        shutil.copy(
+            source,
+            destination
+        )
+
+        self.update_code_markdown()
+
+        self.load_work(
+            self.current_work
+        )
+    def insert_code_reference(self):
+
+        item = self.codes.currentItem()
+
+        if item is None:
+            return
+
+
+        code_name = item.text()
+
+
+        note_file = (
+            Path(self.current_work.folder)
+            / self.current_work.markdown_file
+        )
+
+
+        with open(
+            note_file,
+            "a",
+            encoding="utf-8"
+        ) as f:
+
+            f.write(
+                f"\n```code-file\ncodes/{code_name}\n```\n"
+            )
+
+    def open_code(self, item):
+
+        code_file = (
+            Path(self.current_work.folder)
+            / "codes"
+            / item.text()
+        )
+
+        self.code_window = CodeViewer(
+            code_file
+        )
+
+        self.code_window.show()
+
+    def delete_code(self):
+
+        item = self.codes.currentItem()
+
+        if item is None:
+            return
+
+
+        code_file = (
+            Path(self.current_work.folder)
+            / "codes"
+            / item.text()
+        )
+
+
+        if code_file.exists():
+
+            code_file.unlink()
+
+
+        self.codes.takeItem(
+            self.codes.row(item)
+        )
+
+    def update_code_markdown(self):
+
+        code_folder = (
+            Path(self.current_work.folder)
+            / "codes"
+        )
+
+
+        code_files = list(
+            code_folder.iterdir()
+        )
+
+
+        note_file = (
+            Path(self.current_work.folder)
+            / self.current_work.markdown_file
+        )
+
+
+        self.markdown_service.update_code_section(
+            note_file,
+            code_files
         )
 
     def delete_attachment(self):

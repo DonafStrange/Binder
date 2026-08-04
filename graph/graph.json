@@ -39,6 +39,26 @@
             "id": "work_9cadce2c",
             "label": "EEG Signal Processing: From Neural Recording to Computational Analysis",
             "type": "work"
+        },
+        {
+            "id": "work_d672ddc5",
+            "label": "coding",
+            "type": "work"
+        },
+        {
+            "id": "work_ec5114a2",
+            "label": "coding test",
+            "type": "work"
+        },
+        {
+            "id": "work_5b4b9f23",
+            "label": "Coding test",
+            "type": "work"
+        },
+        {
+            "id": "work_c098c3a8",
+            "label": "Programming in Computational Neuroscience",
+            "type": "work"
         }
     ],
     "edges": []
