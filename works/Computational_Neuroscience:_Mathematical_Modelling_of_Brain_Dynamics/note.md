@@ -6,7 +6,7 @@ Computational neuroscience combines neuroscience, mathematics, physics, and comp
 
 Mathematical modelling provides a framework to represent neurons, neural circuits, and large-scale brain networks using computational simulations. These models allow researchers to investigate mechanisms that are difficult to observe experimentally, predict neural responses, study disease-related alterations, and design biologically inspired computational systems. <a href="reference-pdf://WILSON19721">WILSON19721</a>
 
-
+```see the picture```
 
 ![mode1](../../attachments/images/mode1.jpeg)
 
