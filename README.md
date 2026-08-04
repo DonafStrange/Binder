@@ -227,7 +227,7 @@ Binder requires:
 Clone the repository:
 
 ```bash
-git clone <https://github.com/DonafStrange/Binder.git>
+git clone https://github.com/DonafStrange/Binder.git
 ```
 
 Move into the project directory:
