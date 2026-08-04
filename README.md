@@ -227,7 +227,7 @@ Binder requires:
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/DonafStrange/Binder.git>
 ```
 
 Move into the project directory:
@@ -243,7 +243,7 @@ cd Binder
 Create an isolated Python environment:
 
 ```bash
-python -m venv venv
+python -m venv binderenv
 ```
 
 Activate it.
