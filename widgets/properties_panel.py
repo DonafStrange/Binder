@@ -16,6 +16,33 @@ from PySide6.QtWidgets import QSizePolicy
 from services.work_service import WorkService
 
 
+from PySide6.QtWidgets import QListWidget
+
+
+class TagListWidget(QListWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.RightButton:
+            item = self.itemAt(event.pos())
+            if item is not None:
+                self.setCurrentItem(item)
+            self.customContextMenuRequested.emit(event.pos())
+            event.accept()
+            return
+
+        super().mousePressEvent(event)
+
+    def contextMenuEvent(self, event):
+        item = self.itemAt(event.pos())
+        if item is not None:
+            self.setCurrentItem(item)
+        self.customContextMenuRequested.emit(event.pos())
+        event.accept()
+
 class PropertiesPanel(QWidget):
 
     referenceClicked = Signal(int)
@@ -118,25 +145,15 @@ class PropertiesPanel(QWidget):
         tag_layout = QVBoxLayout()
 
 
-        self.tags = QListWidget()
-
-        self.tags.setContextMenuPolicy(
-            Qt.CustomContextMenu
-        )
+        self.tags = TagListWidget(self)
 
         self.tags.customContextMenuRequested.connect(
             self.tag_menu
         )
 
-        self.tags.setContextMenuPolicy(
-            Qt.CustomContextMenu
+        self.tags.itemClicked.connect(
+            lambda item: print("TAG CLICKED:", item.text())
         )
-
-        self.tags.customContextMenuRequested.connect(
-            lambda pos: print("RIGHT CLICK EVENT", pos)
-        )
-
-#         print("TAG SIGNAL CONNECTED")
 
         tag_layout.addWidget(
             self.tags
@@ -273,12 +290,10 @@ class PropertiesPanel(QWidget):
     # -------------------------------------------------
 
     def load_work(self, work):
-
         """
         Receive a Work object
         and update the panel.
         """
-
 
         if work is None:
 
@@ -307,7 +322,6 @@ class PropertiesPanel(QWidget):
 
 
         self.tags.clear()
-
 
         for tag in work.tags:
 
