@@ -251,13 +251,13 @@ Activate it.
 ### Linux / macOS
 
 ```bash
-source venv/bin/activate
+source binderenv/bin/activate
 ```
 
 ### Windows
 
 ```bash
-venv\Scripts\activate
+vinderenv\Scripts\activate
 ```
 
 ---
