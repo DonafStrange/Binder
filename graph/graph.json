@@ -1,0 +1,45 @@
+{
+    "nodes": [
+        {
+            "id": "work_b83d913a",
+            "label": "demo work",
+            "type": "work"
+        },
+        {
+            "id": "work_c7996e86",
+            "label": "kakaka",
+            "type": "work"
+        },
+        {
+            "id": "work_f8c3ba62",
+            "label": "demo",
+            "type": "work"
+        },
+        {
+            "id": "work_2f2f67d9",
+            "label": "pepo",
+            "type": "work"
+        },
+        {
+            "id": "work_b029782b",
+            "label": "asdfg",
+            "type": "work"
+        },
+        {
+            "id": "work_1cbc40f4",
+            "label": "asdf",
+            "type": "work"
+        },
+        {
+            "id": "work_814e47f3",
+            "label": "Computational Neuroscience: Mathematical Modelling of Brain Dynamics",
+            "type": "work"
+        },
+        {
+            "id": "work_9cadce2c",
+            "label": "EEG Signal Processing: From Neural Recording to Computational Analysis",
+            "type": "work"
+        }
+    ],
+    "edges": []
+}
