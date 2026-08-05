@@ -1,4 +1,4 @@
-# Binder - Research Knowledge Management System
+# Binder - Research Work Management System
 <img width="1920" height="1048" alt="Screenshot from 2026-08-04 18-08-03" src="https://github.com/user-attachments/assets/8761152b-8ee5-417f-b4aa-84ae6221e227" />
 
 ## Overview
