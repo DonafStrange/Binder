@@ -762,37 +762,19 @@ class GraphService:
                     attachment_node = node
                     break
 
-
             if attachment_node is None:
-
-
                 attachment_id = self.create_node(
                     filename,
                     "attachment"
                 )
 
-                if attachment_node is None:
-
-                    attachment_id = self.create_node(
-                        filename,
-                        "attachment"
-                    )
-
-
-                    # add filepath to created node
-
-                    for node in self.graph["nodes"]:
-
-                        if node["id"] == attachment_id:
-
-                            node["filepath"] = filepath
-
-                            break
-
-
-                else:
-
-                    attachment_id = attachment_node["id"]
+                for node in self.graph["nodes"]:
+                    if node["id"] == attachment_id:
+                        node["filepath"] = filepath
+                        attachment_node = node
+                        break
+            else:
+                attachment_id = attachment_node["id"]
 
             self.connect(
 
