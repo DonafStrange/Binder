@@ -424,12 +424,6 @@ Planned features:
 
 * Markdown
 
-## Scientific Libraries
-
-* NumPy
-* SciPy
-* Matplotlib
-
 ---
 
 # License
