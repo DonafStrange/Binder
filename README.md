@@ -258,7 +258,7 @@ source binderenv/bin/activate
 ### Windows
 
 ```bash
-vinderenv\Scripts\activate
+binderenv\Scripts\activate
 ```
 
 ---
