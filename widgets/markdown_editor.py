@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 import os
 import markdown
-from PySide6.QtCore import Qt, Signal, QUrl, Slot
+from PySide6.QtCore import Qt, Signal, QUrl, Slot, QDir
 import re
 from services.reference_service import ReferenceService
 
@@ -802,6 +802,16 @@ class MarkdownEditor(QWidget):
                 f'href="file://{work_path}/pdf/'
             )
 
+        mathjax_path = (
+            Path(__file__).resolve().parent.parent
+            / "mathjax"
+            / "es5"
+            / "tex-mml-chtml.js"
+        )
+
+        mathjax_url = QUrl.fromLocalFile(
+            str(mathjax_path)
+        ).toString()
 
         html = f"""
 
@@ -835,7 +845,7 @@ window.MathJax = {{
 </script>
 
 <script async
-src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+src="{mathjax_url}">
 </script>
 
 
