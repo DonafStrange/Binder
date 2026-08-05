@@ -4,3 +4,10 @@ Pygments==2.19.2
 pyside6==6.11.1
 pyside6_addons==6.11.1
 pyside6_essentials==6.11.1
+numpy
+scipy
+pandas
+ipywidgets
+ipython
+lmfit
+PyRhO
