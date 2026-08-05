@@ -1,5 +1,7 @@
 # Computational Neuroscience: Mathematical Modelling of Brain Dynamics
 
+
+
 ## Overview
 
 Computational neuroscience combines neuroscience, mathematics, physics, and computer science to understand how biological neural systems generate complex behaviours, cognition, and brain states. <a href="reference-pdf://Ref000015">Ref000015</a> <a href="reference-url://Ref000015">🔗</a>

@@ -56,8 +56,6 @@ class ReferenceService:
 
                 keywords TEXT,
 
-                citation_key TEXT,
-
                 bibtex TEXT,
 
                 pdf TEXT,
@@ -73,7 +71,32 @@ class ReferenceService:
                 read_status TEXT DEFAULT '',
 
                 rating INTEGER DEFAULT 0
-            )
+            );
+
+            """
+        )    
+
+        cursor.execute(
+            """
+
+            CREATE TABLE IF NOT EXISTS work_references
+            (
+                work_id INTEGER,
+
+                reference_id INTEGER,
+
+                PRIMARY KEY(
+                    work_id,
+                    reference_id
+                ),
+
+                FOREIGN KEY(work_id)
+                REFERENCES works(id),
+
+                FOREIGN KEY(reference_id)
+                REFERENCES reference_library(id)
+            );
+
             """
         )
 
@@ -495,6 +518,90 @@ class ReferenceService:
 
         connection.close()
 
+    # -------------------------------------------------
+    # Link Reference to Work
+    # -------------------------------------------------
+
+    def add_reference_to_work(
+            self,
+            work_id,
+            reference_id
+    ):
+
+
+        connection = sqlite3.connect(
+            self.db_path
+        )
+
+
+        cursor = connection.cursor()
+
+
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO work_references
+            (
+                work_id,
+                reference_id
+            )
+            VALUES (?, ?)
+            """,
+            (
+                work_id,
+                reference_id
+            )
+        )
+
+
+        connection.commit()
+
+        connection.close()
+
+    # -------------------------------------------------
+    # Get Work References
+    # -------------------------------------------------
+
+    def get_work_references(
+            self,
+            work_id
+    ):
+
+
+        connection = sqlite3.connect(
+            self.db_path
+        )
+
+
+        cursor = connection.cursor()
+
+
+        cursor.execute(
+            """
+            SELECT reference_library.*
+            FROM reference_library
+
+            JOIN work_references
+
+            ON reference_library.id =
+               work_references.reference_id
+
+            WHERE work_references.work_id=?
+
+            """,
+            (
+                work_id,
+            )
+        )
+
+
+        rows = cursor.fetchall()
+
+
+        connection.close()
+
+
+        return rows
+
 
 # -------------------------------------------------
 # Reference Object
@@ -591,6 +698,3 @@ class ReferenceObject:
         self.read_status = read_status
 
         self.rating = rating
-
-
-        

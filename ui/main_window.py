@@ -22,6 +22,7 @@ from widgets.markdown_editor import MarkdownEditor
 #from widgets.attachment_panel import AttachmentPanel
 from widgets.reference_library import ReferenceLibrary
 from widgets.reference_properties import ReferenceProperties
+from widgets.graph_canvas import GraphCanvas
 #from widgets.work_reference_panel import WorkReferencePanel
 
 from services.work_service import WorkService
@@ -396,6 +397,20 @@ class MainWindow(QMainWindow):
             reference
         )
 
+        toolbar.addSeparator()
+
+        graph = QAction(
+            "Link Graph",
+            self
+        )
+
+        graph.triggered.connect(
+            self.open_graph
+        )
+
+        toolbar.addAction(
+            graph
+        )
     # -------------------------------------------------
     # New Work
     # -------------------------------------------------
@@ -423,6 +438,25 @@ class MainWindow(QMainWindow):
         )
 
         dialog.exec()
+
+    # -------------------------------------------------
+    # Link Graph
+    # -------------------------------------------------
+
+    def open_graph(self):
+
+        self.graph_window = GraphCanvas()
+
+        self.graph_window.setWindowTitle(
+            "Work Connection Graph"
+        )
+
+        self.graph_window.resize(
+            1200,
+            800
+        )
+
+        self.graph_window.show()
 
     # -------------------------------------------------
     # Refresh Projects

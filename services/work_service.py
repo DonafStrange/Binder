@@ -94,6 +94,23 @@ class WorkService:
             """
         )
 
+        cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS attachments
+        (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            work_id INTEGER,
+
+            filename TEXT,
+
+            filepath TEXT,
+
+            filetype TEXT
+        )
+        """
+    )
+
         connection.commit()
 
         connection.close()
@@ -540,6 +557,33 @@ class WorkService:
 
         connection.close()
 
+    def get_work_by_folder(self, folder):
+
+        connection = sqlite3.connect(
+            self.db_path
+        )
+
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id
+            FROM works
+            WHERE folder=?
+            """,
+            (
+                str(folder),
+            )
+        )
+
+        result = cursor.fetchone()
+
+        connection.close()
+
+        if result:
+            return result[0]
+
+        return None
 
 # -------------------------------------------------
 # Work Object

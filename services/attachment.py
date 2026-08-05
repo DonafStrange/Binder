@@ -1,6 +1,7 @@
 from pathlib import Path
 from os.path import relpath
 import shutil
+import sqlite3
 
 
 class AttachmentService:
@@ -12,7 +13,8 @@ class AttachmentService:
     def copy_attachment(
         self,
         source_file,
-        work_folder=None
+        work_folder=None,
+        work_id=None
     ):
 
         source = Path(source_file)
@@ -91,6 +93,42 @@ class AttachmentService:
             destination
         )
 
+        if work_id is not None:
+
+
+            connection = sqlite3.connect(
+                "database/database.db"
+            )
+
+
+            cursor = connection.cursor()
+
+
+            cursor.execute(
+                """
+                INSERT INTO attachments
+                (
+                    work_id,
+                    filename,
+                    filepath,
+                    filetype
+                )
+
+                VALUES (?, ?, ?, ?)
+
+                """,
+                (
+                    work_id,
+                    destination.name,
+                    str(destination),
+                    extension
+                )
+            )
+
+
+            connection.commit()
+
+            connection.close()
 
         return destination
 
@@ -149,3 +187,125 @@ class AttachmentService:
         else:
 
             return f"[📁 {Path(relative).name}]({relative})"
+
+    def register_attachment(
+        self,
+        work_id,
+        filepath
+    ):
+
+        connection = sqlite3.connect(
+            "database/database.db"
+        )
+
+        cursor = connection.cursor()
+
+
+        cursor.execute(
+            """
+            INSERT INTO attachments
+            (
+                work_id,
+                filename,
+                filepath,
+                filetype
+            )
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                work_id,
+                filepath.name,
+                str(filepath),
+                filepath.suffix.lower()
+            )
+        )
+
+        connection.commit()
+
+        connection.close()
+
+    def sync_work_attachments(
+        self,
+        work_id,
+        markdown_text
+    ):
+
+        import re
+        import sqlite3
+
+
+        # Find all attachment paths in markdown
+        paths = re.findall(
+            r"\]\((.*?)\)",
+            markdown_text
+        )
+
+
+        attachments = []
+
+
+        for path in paths:
+
+            if "attachments/" in path:
+
+                index = path.find(
+                    "attachments/"
+                )
+
+                clean = path[index:]
+
+                attachments.append(
+                    str(
+                        Path(clean)
+                    )
+                )
+
+
+        connection = sqlite3.connect(
+            "database/database.db"
+        )
+
+        cursor = connection.cursor()
+
+
+        # Existing database attachments
+        cursor.execute(
+            """
+            SELECT id, filepath
+            FROM attachments
+            WHERE work_id=?
+            """,
+            (
+                work_id,
+            )
+        )
+
+
+        existing = cursor.fetchall()
+
+
+
+        # Remove unused
+        for row in existing:
+
+            attachment_id = row[0]
+
+            filepath = row[1]
+
+
+            if filepath not in attachments:
+
+                cursor.execute(
+                    """
+                    DELETE FROM attachments
+                    WHERE id=?
+                    """,
+                    (
+                        attachment_id,
+                    )
+                )
+
+
+        connection.commit()
+
+        connection.close()

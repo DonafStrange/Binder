@@ -2,6 +2,7 @@ from widgets.reference_picker import ReferencePicker
 from widgets.equation_editor import EquationEditor
 from PySide6.QtWidgets import QFileDialog
 from services.attachment import AttachmentService
+from services.work_service import WorkService
 from PySide6.QtWidgets import QMenu
 import subprocess
 from pathlib import Path
@@ -394,11 +395,23 @@ class MarkdownEditor(QWidget):
 
         if selected in actions:
 
-
             file = actions[selected]
+
+            work_service = WorkService()
 
 
             work_folder = self.current_file.parent
+
+
+            work_id = work_service.get_work_by_folder(
+                work_folder
+            )
+
+            if work_id is not None:
+                self.attachment_service.register_attachment(
+                    work_id,
+                    file
+                )
 
             path = os.path.relpath(
                 file,
@@ -595,7 +608,34 @@ class MarkdownEditor(QWidget):
 
 
         text = self.editor.toPlainText()
+
         text = self.replace_citations(text)
+
+
+        # ------------------------------------
+        # Sync attachments with database
+        # ------------------------------------
+
+
+        work_service = WorkService()
+
+
+        work_id = work_service.get_work_by_folder(
+            self.current_file.parent
+        )
+
+
+        if work_id is not None:
+
+            self.attachment_service.sync_work_attachments(
+                work_id,
+                text
+            )
+
+
+        # ------------------------------------
+        # Save markdown file
+        # ------------------------------------
 
         self.current_file.write_text(
 
