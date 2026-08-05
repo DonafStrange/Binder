@@ -3,7 +3,7 @@
 
 ## Overview
 
-**Binder** is a research knowledge management application designed to organize scientific projects, notes, references, and associated files in a structured way.
+**Binder** is a research documents management system designed to organize scientific projects, notes, references, and associated files in a structured way.
 
 The goal of Binder is to provide a local, lightweight alternative to traditional reference managers by combining:
 
