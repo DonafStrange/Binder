@@ -18,33 +18,16 @@ The application is designed for researchers, students, and academics who need to
 
 ---
 
-# Directory Structure
+# Important Folders
 
-The main directory contains the following components:
+The main directory contains the following folders which stores the document files:
 
 ```
 Binder/
 │
 ├── app.py                  # Main application launcher
 │
-├── database/
-│   └── database.db         # SQLite database
-│
-├── services/               # Backend logic
-│   ├── work_service.py
-│   ├── reference_service.py
-│   ├── attachment.py
-│   └── markdown_service.py
-│
-├── widgets/                # GUI components
-│   ├── properties_panel.py
-│   ├── reference_library.py
-│   ├── project_tree.py
-│   └── ...
-│
-├── models/                 # Data models
-│
-├── ui/                     # Application windows
+├── 
 │
 ├── works/                  # Research projects
 │   └── Work_Name/
