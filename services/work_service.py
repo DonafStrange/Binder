@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 from services.graph import GraphService
-
+from services.category_service import CategoryService
 
 
 class WorkService:
@@ -25,7 +25,7 @@ class WorkService:
         )
 
         self.graph = GraphService()
-
+        self.category_service = CategoryService()
 
         self.create_table()
 
@@ -186,7 +186,8 @@ class WorkService:
 
         now = datetime.now().isoformat()
 
-
+        if category:
+            self.category_service.add_category(category)
 
         # Database insert
 
@@ -265,6 +266,38 @@ class WorkService:
 
             "folder": str(folder)
 
+        }
+
+    def update_work(self, work_id, title, category):
+        if category:
+            self.category_service.add_category(category)
+
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            UPDATE works
+            SET title = ?, category = ?, modified = ?
+            WHERE id = ?
+            """,
+            (
+                title,
+                category,
+                datetime.now().isoformat(),
+                work_id,
+            ),
+        )
+
+        connection.commit()
+        connection.close()
+
+        self.graph.sync_works()
+
+        return {
+            "database_id": work_id,
+            "title": title,
+            "category": category,
         }
 
     def get_work_tags(self, work_id):

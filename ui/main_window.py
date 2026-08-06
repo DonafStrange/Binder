@@ -26,6 +26,7 @@ from widgets.graph_canvas import GraphCanvas
 #from widgets.work_reference_panel import WorkReferencePanel
 
 from services.work_service import WorkService
+from dialogs.category_manager_dialog import CategoryManagerDialog
 
 
 
@@ -312,6 +313,13 @@ class MainWindow(QMainWindow):
             "File"
         )
 
+        edit_menu = menu.addMenu("Edit")
+        tools_menu = menu.addMenu("Tools")
+
+        manage_categories_action = QAction("Manage Categories", self)
+        manage_categories_action.triggered.connect(self.open_category_manager)
+        edit_menu.addAction(manage_categories_action)
+        tools_menu.addAction(manage_categories_action)
 
         exit_action = QAction(
             "Exit",
@@ -400,7 +408,7 @@ class MainWindow(QMainWindow):
         toolbar.addSeparator()
 
         graph = QAction(
-            "Link Graph",
+            "Connections",
             self
         )
 
@@ -411,6 +419,25 @@ class MainWindow(QMainWindow):
         toolbar.addAction(
             graph
         )
+
+        toolbar.addSeparator()
+
+        categories = QAction(
+            "Manage Categories",
+            self
+        )
+
+        categories.triggered.connect(
+            self.open_category_manager
+        )
+
+        toolbar.addAction(
+            categories
+        )
+    def open_category_manager(self):
+        dialog = CategoryManagerDialog(self)
+        dialog.exec()
+
     # -------------------------------------------------
     # New Work
     # -------------------------------------------------
