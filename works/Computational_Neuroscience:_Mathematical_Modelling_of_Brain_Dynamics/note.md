@@ -4,9 +4,9 @@
 
 ## Overview
 
-Computational neuroscience combines neuroscience, mathematics, physics, and computer science to understand how biological neural systems generate complex behaviours, cognition, and brain states. <a href="reference-pdf://Ref000015">Ref000015</a> <a href="reference-url://Ref000015">🔗</a>
+Computational neuroscience combines neuroscience, mathematics, physics, and computer science to understand how biological neural systems generate complex behaviours, cognition, and brain states.<a href="reference-pdf://Ref000015">Ref000015</a> <a href="reference-url://Ref000015">🔗</a>
 
-Mathematical modelling provides a framework to represent neurons, neural circuits, and large-scale brain networks using computational simulations. These models allow researchers to investigate mechanisms that are difficult to observe experimentally, predict neural responses, study disease-related alterations, and design biologically inspired computational systems. <a href="reference-pdf://WILSON19721">WILSON19721</a>
+Mathematical modelling provides a framework to represent neurons, neural circuits, and large-scale brain networks using computational simulations. These models allow researchers to investigate mechanisms that are difficult to observe experimentally, predict neural responses, study disease-related alterations, and design biologically inspired computational systems.<a href="reference-pdf://WILSON19721">WILSON19721</a>
 
 ```see the picture```
 

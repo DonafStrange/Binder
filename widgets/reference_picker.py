@@ -191,6 +191,8 @@ class ReferencePicker(QDialog):
 
         key = item.text().split("|")[0].strip()
 
+        print("EMITTING REFERENCE KEY:", key)
+
 
         self.referenceSelected.emit(
             key

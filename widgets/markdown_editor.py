@@ -676,6 +676,43 @@ class MarkdownEditor(QWidget):
             """
         )
 
+    def insert_citation(self, key):
+
+        if self.current_file is None:
+            return
+
+
+        reference_service = ReferenceService()
+        work_service = WorkService()
+
+
+        work_folder = self.current_file.parent
+
+
+        work_id = work_service.get_work_by_folder(
+            work_folder
+        )
+
+
+        reference_id = reference_service.get_reference_by_key(
+            key
+        )
+
+        if (
+            work_id is not None
+            and reference_id is not None
+        ):
+
+            reference_service.add_reference_to_work(
+                work_id,
+                reference_id
+            )
+
+
+        self.insert_text(
+            f"[{key}]"
+        )
+
     def replace_citations(self, text):
 
         service = ReferenceService()
@@ -1117,16 +1154,3 @@ padding:10px;
             f"${equation}$"
         )
 
-
-
-    # -------------------------------------------------
-    # Insert Citation
-    # -------------------------------------------------
-
-    def insert_citation(self, key):
-
-        self.insert_text(
-
-            f"[{key}]"
-
-        )

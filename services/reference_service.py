@@ -602,6 +602,33 @@ class ReferenceService:
 
         return rows
 
+    def get_reference_by_key(self, citation_key):
+
+        connection = sqlite3.connect(
+            "database/database.db"
+        )
+
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id
+            FROM reference_library
+            WHERE citation_key=?
+            """,
+            (citation_key,)
+        )
+
+        row = cursor.fetchone()
+
+        connection.close()
+
+        if row:
+
+            return row[0]
+
+        return None
+
 
 # -------------------------------------------------
 # Reference Object

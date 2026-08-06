@@ -10,6 +10,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import (
     QGraphicsEllipseItem,
     QGraphicsSimpleTextItem,
+    QGraphicsItem,
 )
 
 
@@ -68,4 +69,23 @@ class GraphNode(QGraphicsEllipseItem):
         self.label.setPos(
             -rect.width() / 2,
             -rect.height() / 2
+        )
+
+        self.edges = []
+
+    def add_edge(self, edge):
+
+        self.edges.append(edge)
+
+    def itemChange(self, change, value):
+
+        if change == QGraphicsItem.ItemPositionChange:
+
+            for edge in self.edges:
+
+                edge.update_position()
+
+        return super().itemChange(
+            change,
+            value
         )

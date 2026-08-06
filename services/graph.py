@@ -213,7 +213,8 @@ class GraphService:
             self,
             source,
             target,
-            relation
+            relation,
+            weight=None
     ):
 
 
@@ -267,6 +268,11 @@ class GraphService:
             ]
 
         }
+
+
+        if weight is not None:
+
+            edge["weight"] = weight
 
 
         self.graph["edges"].append(
@@ -460,8 +466,9 @@ class GraphService:
                 )
         self.sync_category_connections()
         self.sync_tag_connections()
-        self.sync_reference_connections()
+        self.sync_shared_reference_connections()
         self.sync_attachment_connections()
+        self.sync_reference_connections()
         self.save()
 
     # -------------------------------------------------
@@ -470,161 +477,35 @@ class GraphService:
 
     def sync_tag_connections(self):
 
-
         from services.work_service import WorkService
 
-
         work_service = WorkService()
-
         works = work_service.get_all_works()
 
+        for work in works:
+            work_node = self.find_node(work.title)
+            if work_node is None:
+                continue
 
-        for i, work1 in enumerate(works):
+            for tag_name in work.tags:
+                tag_node = self.find_node(tag_name)
+                if tag_node is None:
+                    tag_node_id = self.create_node(tag_name, "tag")
+                    tag_node = {
+                        "id": tag_node_id,
+                        "label": tag_name,
+                        "type": "tag"
+                    }
 
-            for work2 in works[i+1:]:
-
-
-                common_tags = set(
-                    work1.tags
-                ).intersection(
-                    set(work2.tags)
+                self.connect(
+                    work_node["id"],
+                    tag_node["id"],
+                    "tag"
                 )
-
-
-                if common_tags:
-
-
-                    node1 = self.find_node(
-                        work1.title
-                    )
-
-                    node2 = self.find_node(
-                        work2.title
-                    )
-
-
-                    if node1 and node2:
-
-
-                        self.connect(
-
-                            node1["id"],
-
-                            node2["id"],
-
-                            "tag"
-
-                        )
 
     # -------------------------------------------------
     # Sync Category Connections
     # -------------------------------------------------
-
-    # -------------------------------------------------
-    # Sync Reference Connections
-    # -------------------------------------------------
-
-    def sync_reference_connections(self):
-
-
-        import sqlite3
-
-
-        connection = sqlite3.connect(
-            "database/database.db"
-        )
-
-
-        cursor = connection.cursor()
-
-
-        cursor.execute(
-            """
-            SELECT
-                work_references.work_id,
-                work_references.reference_id,
-
-                works.title,
-
-                reference_library.title
-
-            FROM work_references
-
-
-            JOIN works
-
-            ON works.id =
-               work_references.work_id
-
-
-            JOIN reference_library
-
-            ON reference_library.id =
-               work_references.reference_id
-
-            """
-        )
-
-
-        rows = cursor.fetchall()
-
-
-        connection.close()
-
-
-
-        for work_id, reference_id, work_title, ref_title in rows:
-
-
-            work_node = self.find_node(
-                work_title
-            )
-
-
-            if work_node is None:
-
-                continue
-
-
-
-            reference_node = self.find_node(
-                ref_title
-            )
-
-
-            if reference_node is None:
-
-
-                reference_graph_id = self.create_node(
-
-                    ref_title,
-
-                    "reference"
-
-                )
-
-
-                reference_node = {
-
-                    "id": reference_graph_id,
-
-                    "label": ref_title,
-
-                    "type": "reference"
-
-                }
-
-
-
-            self.connect(
-
-                work_node["id"],
-
-                reference_node["id"],
-
-                "reference"
-
-            )
 
     def sync_category_connections(self):
 
@@ -788,6 +669,170 @@ class GraphService:
 
 
         connection.close()
+
+
+        self.save()
+
+    def sync_reference_connections(self):
+
+        import sqlite3
+
+        connection = sqlite3.connect(
+            "database/database.db"
+        )
+
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                work_references.work_id,
+                work_references.reference_id,
+                works.title,
+                reference_library.title
+            FROM work_references
+            JOIN works
+                ON works.id = work_references.work_id
+            JOIN reference_library
+                ON reference_library.id = work_references.reference_id
+            """
+        )
+
+        rows = cursor.fetchall()
+        connection.close()
+
+        for work_id, reference_id, work_title, reference_title in rows:
+            work_node = self.find_node(work_title)
+            if work_node is None:
+                continue
+
+            reference_node = self.find_node(reference_title)
+            if reference_node is None:
+                reference_node_id = self.create_node(reference_title, "reference")
+                reference_node = {
+                    "id": reference_node_id,
+                    "label": reference_title,
+                    "type": "reference"
+                }
+
+            self.connect(
+                work_node["id"],
+                reference_node["id"],
+                "reference"
+            )
+
+        self.save()
+
+    def sync_shared_reference_connections(self):
+
+        import sqlite3
+
+
+        connection = sqlite3.connect(
+            "database/database.db"
+        )
+
+        cursor = connection.cursor()
+
+
+        cursor.execute(
+            """
+            SELECT
+                work_references.work_id,
+                work_references.reference_id,
+                works.title
+            FROM work_references
+
+            JOIN works
+                ON works.id = work_references.work_id
+            """
+        )
+
+
+        rows = cursor.fetchall()
+
+
+        connection.close()
+
+        # -----------------------------------------
+        # Work title -> set of reference IDs
+        # -----------------------------------------
+
+        work_to_references = {}
+
+
+        for work_id, reference_id, work_title in rows:
+
+            if work_title not in work_to_references:
+
+                work_to_references[work_title] = set()
+
+
+            work_to_references[work_title].add(
+                reference_id
+            )
+
+        # -----------------------------------------
+        # Compare every work pair
+        # -----------------------------------------
+
+        work_titles = list(
+            work_to_references.keys()
+        )
+
+
+        for i in range(len(work_titles)):
+
+            for j in range(
+                i + 1,
+                len(work_titles)
+            ):
+
+                work1 = work_titles[i]
+                work2 = work_titles[j]
+
+
+                shared = (
+                    work_to_references[work1]
+                    &
+                    work_to_references[work2]
+                )
+
+
+                weight = len(shared)
+
+
+                if weight == 0:
+                    continue
+
+
+                work1_node = self.find_node(
+                    work1
+                )
+
+                work2_node = self.find_node(
+                    work2
+                )
+
+
+                if (
+                    work1_node is None
+                    or
+                    work2_node is None
+                ):
+                    continue
+
+                self.connect(
+
+                    work1_node["id"],
+
+                    work2_node["id"],
+
+                    "shared_reference",
+
+                    weight
+
+                )
 
 
         self.save()

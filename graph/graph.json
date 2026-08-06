@@ -1,115 +1,271 @@
 {
     "nodes": [
         {
-            "id": "work_67d0a467",
+            "id": "work_ccf546bf",
             "label": "Computational Neuroscience: Mathematical Modelling of Brain Dynamics",
             "type": "work"
         },
         {
-            "id": "work_10f8134e",
+            "id": "work_3d8b13f8",
             "label": "EEG Signal Processing: From Neural Recording to Computational Analysis",
             "type": "work"
         },
         {
-            "id": "work_a81941fc",
+            "id": "work_2f2021ce",
             "label": "Programming in Computational Neuroscience",
             "type": "work"
         },
         {
-            "id": "category_291b1d2a",
+            "id": "work_3763e4ec",
+            "label": "graph test",
+            "type": "work"
+        },
+        {
+            "id": "category_d87f2ae0",
             "label": "Computational Neuroscience",
             "type": "category"
         },
         {
-            "id": "category_e1c22245",
+            "id": "category_5136f7b7",
             "label": "EEG Analysis",
             "type": "category"
         },
         {
-            "id": "reference_0075c066",
-            "label": "Excitatory and Inhibitory Interactions in Localized Populations of Model Neurons",
-            "type": "reference"
+            "id": "category_c08a0f72",
+            "label": "Machine Learning",
+            "type": "category"
         },
         {
-            "id": "attachment_f21a979a",
+            "id": "attachment_004ece77",
             "label": "mode2.jpeg",
             "type": "attachment",
             "filepath": "attachments/images/mode2.jpeg"
         },
         {
-            "id": "attachment_efdb88a7",
+            "id": "attachment_6649a273",
             "label": "mode1.jpeg",
             "type": "attachment",
             "filepath": "attachments/images/mode1.jpeg"
         },
         {
-            "id": "attachment_fcaff0bc",
+            "id": "attachment_70587970",
             "label": "eeg2.jpeg",
             "type": "attachment",
             "filepath": "attachments/images/eeg2.jpeg"
         },
         {
-            "id": "attachment_6788734f",
+            "id": "attachment_85150393",
             "label": "eeg1.jpeg",
             "type": "attachment",
             "filepath": "attachments/images/eeg1.jpeg"
+        },
+        {
+            "id": "reference_3a5e4e89",
+            "label": "Excitatory and Inhibitory Interactions in Localized Populations of Model Neurons",
+            "type": "reference"
+        },
+        {
+            "id": "reference_3f797b46",
+            "label": "Mathematical framework for large-scale brain network modeling in The Virtual Brain",
+            "type": "reference"
+        },
+        {
+            "id": "reference_ca75787a",
+            "label": "EEGLAB",
+            "type": "reference"
+        },
+        {
+            "id": "tag_ab0c9b79",
+            "label": "Brain Modelling",
+            "type": "tag"
+        },
+        {
+            "id": "tag_c23a5891",
+            "label": "EEG Processing",
+            "type": "tag"
         }
     ],
     "edges": [
         {
-            "source": "work_67d0a467",
-            "target": "category_291b1d2a",
+            "source": "work_ccf546bf",
+            "target": "category_d87f2ae0",
+            "relations": [
+                "category",
+                "tag"
+            ]
+        },
+        {
+            "source": "work_3d8b13f8",
+            "target": "category_5136f7b7",
             "relations": [
                 "category"
             ]
         },
         {
-            "source": "work_10f8134e",
-            "target": "category_e1c22245",
+            "source": "work_2f2021ce",
+            "target": "category_d87f2ae0",
             "relations": [
                 "category"
             ]
         },
         {
-            "source": "work_a81941fc",
-            "target": "category_291b1d2a",
+            "source": "work_3763e4ec",
+            "target": "category_c08a0f72",
             "relations": [
                 "category"
             ]
         },
         {
-            "source": "work_67d0a467",
-            "target": "reference_0075c066",
+            "source": "work_ccf546bf",
+            "target": "work_3763e4ec",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "attachment_004ece77",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "attachment_6649a273",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_2f2021ce",
+            "target": "attachment_70587970",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_3d8b13f8",
+            "target": "attachment_85150393",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "work_3d8b13f8",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "work_3d8b13f8",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "work_2f2021ce",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "work_2f2021ce",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_3d8b13f8",
+            "target": "work_2f2021ce",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
+            "source": "work_2f2021ce",
+            "target": "attachment_85150393",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "attachment_85150393",
+            "relations": [
+                "attachment"
+            ]
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "reference_3a5e4e89",
             "relations": [
                 "reference"
             ]
         },
         {
-            "source": "work_67d0a467",
-            "target": "attachment_f21a979a",
+            "source": "work_3763e4ec",
+            "target": "reference_3a5e4e89",
             "relations": [
-                "attachment"
+                "reference"
             ]
         },
         {
-            "source": "work_67d0a467",
-            "target": "attachment_efdb88a7",
+            "source": "work_3763e4ec",
+            "target": "reference_3f797b46",
             "relations": [
-                "attachment"
+                "reference"
             ]
         },
         {
-            "source": "work_a81941fc",
-            "target": "attachment_fcaff0bc",
+            "source": "work_ccf546bf",
+            "target": "reference_3f797b46",
             "relations": [
-                "attachment"
+                "reference"
             ]
         },
         {
-            "source": "work_10f8134e",
-            "target": "attachment_6788734f",
+            "source": "work_3d8b13f8",
+            "target": "reference_3a5e4e89",
             "relations": [
-                "attachment"
+                "reference"
+            ]
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "reference_ca75787a",
+            "relations": [
+                "reference"
+            ]
+        },
+        {
+            "source": "work_2f2021ce",
+            "target": "reference_3a5e4e89",
+            "relations": [
+                "reference"
+            ]
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "tag_ab0c9b79",
+            "relations": [
+                "tag"
+            ]
+        },
+        {
+            "source": "work_3d8b13f8",
+            "target": "tag_c23a5891",
+            "relations": [
+                "tag"
             ]
         }
     ]
