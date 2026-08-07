@@ -35,4 +35,18 @@ class GraphWindow(QWidget):
         # graph takes all width
         self.splitter.setSizes([1, 0])
 
+        self.graph.nodeSelected.connect(self.show_node_info)
+        self.info.closed.connect(self.close_node_info)
+
         self.setLayout(layout)
+
+    def show_node_info(self, node_data):
+
+        self.info.set_node_data(node_data)
+        self.info.show()
+        self.splitter.setSizes([3, 1])
+
+    def close_node_info(self):
+
+        self.info.hide()
+        self.splitter.setSizes([1, 0])

@@ -300,6 +300,33 @@ class WorkService:
             "category": category,
         }
 
+    def get_tag_id_by_name(self, tag_name):
+
+        tag_name = (tag_name or "").strip()
+
+        if not tag_name:
+            return None
+
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id
+            FROM tags
+            WHERE name=?
+            """,
+            (tag_name,),
+        )
+
+        result = cursor.fetchone()
+        connection.close()
+
+        if result:
+            return result[0]
+
+        return None
+
     def get_work_tags(self, work_id):
 
         connection = sqlite3.connect(
@@ -359,6 +386,11 @@ class WorkService:
 
     def add_tag_to_work(self, work_id, tag_name):
 
+        tag_name = (tag_name or "").strip()
+
+        if not tag_name:
+            return None
+
         connection = sqlite3.connect(
             self.db_path
         )
@@ -366,7 +398,6 @@ class WorkService:
         cursor = connection.cursor()
 
 
-        # Create tag if it does not exist
         cursor.execute(
             """
             INSERT OR IGNORE INTO tags(name)
@@ -378,7 +409,6 @@ class WorkService:
         )
 
 
-        # Get tag id
         cursor.execute(
             """
             SELECT id
@@ -393,7 +423,6 @@ class WorkService:
         tag_id = cursor.fetchone()[0]
 
 
-        # Link tag with work
         cursor.execute(
             """
             INSERT OR IGNORE INTO work_tags
@@ -413,6 +442,90 @@ class WorkService:
         connection.commit()
 
         connection.close()
+
+        return tag_id
+
+    def rename_tag(self, tag_id, new_name):
+
+        new_name = (new_name or "").strip()
+
+        if not new_name:
+            return None
+
+        connection = sqlite3.connect(
+            self.db_path
+        )
+
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT id
+            FROM tags
+            WHERE name=? AND id != ?
+            """,
+            (
+                new_name,
+                tag_id,
+            )
+        )
+
+        existing = cursor.fetchone()
+
+        if existing:
+            target_tag_id = existing[0]
+
+            cursor.execute(
+                """
+                DELETE FROM work_tags
+                WHERE work_id IN (
+                    SELECT work_id FROM work_tags WHERE tag_id=?
+                )
+                AND tag_id=?
+                """,
+                (
+                    tag_id,
+                    target_tag_id,
+                )
+            )
+            cursor.execute(
+                """
+                UPDATE work_tags
+                SET tag_id=?
+                WHERE tag_id=?
+                """,
+                (
+                    target_tag_id,
+                    tag_id,
+                )
+            )
+            cursor.execute(
+                """
+                DELETE FROM tags
+                WHERE id=?
+                """,
+                (
+                    tag_id,
+                )
+            )
+            tag_id = target_tag_id
+        else:
+            cursor.execute(
+                """
+                UPDATE tags
+                SET name=?
+                WHERE id=?
+                """,
+                (
+                    new_name,
+                    tag_id,
+                )
+            )
+
+        connection.commit()
+        connection.close()
+
+        return tag_id
 
     # -------------------------------------------------
     # Get All Works
@@ -545,7 +658,7 @@ class WorkService:
 
         connection.close()
 
-    def remove_tag_from_work(self, work_id, tag_name):
+    def remove_tag_from_work(self, work_id, tag_id):
 
         connection = sqlite3.connect(
             self.db_path
@@ -553,38 +666,60 @@ class WorkService:
 
         cursor = connection.cursor()
 
+        if isinstance(tag_id, str):
+            cursor.execute(
+                """
+                SELECT id
+                FROM tags
+                WHERE name=?
+                """,
+                (
+                    tag_id,
+                )
+            )
+            result = cursor.fetchone()
+            if result:
+                tag_id = result[0]
+            else:
+                tag_id = None
+
+        if tag_id is None:
+            connection.close()
+            return
 
         cursor.execute(
             """
-            SELECT id
-            FROM tags
-            WHERE name=?
+            DELETE FROM work_tags
+            WHERE work_id=?
+            AND tag_id=?
             """,
             (
-                tag_name,
+                work_id,
+                tag_id
             )
         )
 
-        result = cursor.fetchone()
+        cursor.execute(
+            """
+            SELECT COUNT(*)
+            FROM work_tags
+            WHERE tag_id=?
+            """,
+            (
+                tag_id,
+            )
+        )
 
-
-        if result:
-
-            tag_id = result[0]
-
-
+        if cursor.fetchone()[0] == 0:
             cursor.execute(
                 """
-                DELETE FROM work_tags
-                WHERE work_id=?
-                AND tag_id=?
+                DELETE FROM tags
+                WHERE id=?
                 """,
                 (
-                    work_id,
-                    tag_id
+                    tag_id,
                 )
             )
-
 
         connection.commit()
 

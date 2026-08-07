@@ -14,7 +14,7 @@ from PySide6.QtGui import (
     QBrush,
 )
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton
 from widgets.graph_node import GraphNode
 from services.work_service import WorkService
@@ -23,6 +23,8 @@ from PySide6.QtWidgets import QGraphicsLineItem
 from PySide6.QtGui import QPen
 
 class GraphCanvas(QGraphicsView):
+
+    nodeSelected = Signal(dict)
 
     def __init__(self, parent=None):
 
@@ -194,6 +196,8 @@ class GraphCanvas(QGraphicsView):
                     y
                 )
 
+                node.clicked.connect(self.handle_node_selection)
+
                 self.scene.addItem(
                     node
                 )
@@ -210,6 +214,17 @@ class GraphCanvas(QGraphicsView):
             self.scene.sceneRect(),
             Qt.KeepAspectRatio
         )
+
+    def handle_node_selection(self, node_item):
+
+        if not hasattr(node_item, "graph_id"):
+            return
+
+        for graph_node in self.graph_service.graph["nodes"]:
+            if graph_node.get("id") == node_item.graph_id:
+                payload = dict(graph_node)
+                self.nodeSelected.emit(payload)
+                return
 
     def load_edges(self):
 

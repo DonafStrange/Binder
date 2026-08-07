@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal, QObject
 
 from PySide6.QtGui import (
     QBrush,
@@ -14,6 +14,11 @@ from PySide6.QtWidgets import (
 )
 
 
+class GraphNodeSignals(QObject):
+
+    clicked = Signal(object)
+
+
 class GraphNode(QGraphicsEllipseItem):
 
     def __init__(self, title, radius=40):
@@ -24,6 +29,9 @@ class GraphNode(QGraphicsEllipseItem):
             radius * 2,
             radius * 2
         )
+
+        self.signals = GraphNodeSignals()
+        self.clicked = self.signals.clicked
 
         self.setBrush(
             QBrush(
@@ -89,3 +97,8 @@ class GraphNode(QGraphicsEllipseItem):
             change,
             value
         )
+
+    def mousePressEvent(self, event):
+
+        self.clicked.emit(self)
+        super().mousePressEvent(event)

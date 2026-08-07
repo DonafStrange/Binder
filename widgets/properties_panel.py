@@ -8,6 +8,10 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QPushButton,
+    QHBoxLayout,
+    QMessageBox,
+    QInputDialog,
+    QMenu,
 )
 from pathlib import Path
 from services.markdown_service import MarkdownService
@@ -152,12 +156,38 @@ class PropertiesPanel(QWidget):
         )
 
         self.tags.itemClicked.connect(
-            lambda item: print("TAG CLICKED:", item.text())
+            lambda item: None
         )
+        self.tags.itemSelectionChanged.connect(
+            self.update_tag_buttons_state
+        )
+        self.tags.setSelectionMode(QListWidget.SingleSelection)
 
         tag_layout.addWidget(
             self.tags
         )
+
+        tag_buttons = QHBoxLayout()
+        tag_buttons.setContentsMargins(0, 6, 0, 0)
+        tag_buttons.setSpacing(6)
+
+        self.add_tag_btn = QPushButton("Add Tag")
+        self.add_tag_btn.clicked.connect(self.add_tag)
+        tag_buttons.addWidget(self.add_tag_btn)
+
+        self.rename_tag_btn = QPushButton("Rename")
+        self.rename_tag_btn.clicked.connect(self.rename_tag)
+        self.rename_tag_btn.setEnabled(False)
+        tag_buttons.addWidget(self.rename_tag_btn)
+
+        self.delete_tag_btn = QPushButton("Delete")
+        self.delete_tag_btn.clicked.connect(self.delete_tag)
+        self.delete_tag_btn.setEnabled(False)
+        tag_buttons.addWidget(self.delete_tag_btn)
+
+        tag_buttons.addStretch()
+
+        tag_layout.addLayout(tag_buttons)
 
 
         tag_box.setLayout(
@@ -772,106 +802,136 @@ class PropertiesPanel(QWidget):
 
     def tag_menu(self, position):
 
-#         print("TAG MENU OPENED")
-
-        from PySide6.QtWidgets import QMenu, QInputDialog
-
-
         menu = QMenu()
 
-
-        add_action = menu.addAction(
-            "Add Tag"
-        )
-
-        remove_action = menu.addAction(
-            "Remove Tag"
-        )
-
+        add_action = menu.addAction("Add New Tag")
+        rename_action = menu.addAction("Rename Tag")
+        remove_action = menu.addAction("Delete Tag")
 
         action = menu.exec(
             self.tags.mapToGlobal(position)
         )
 
-
         if action == add_action:
-
             self.add_tag()
-
-
+        elif action == rename_action:
+            self.rename_tag()
         elif action == remove_action:
+            self.delete_tag()
 
-            self.remove_tag()
+    def update_tag_buttons_state(self):
+        has_selection = self.tags.currentItem() is not None
+        self.rename_tag_btn.setEnabled(has_selection)
+        self.delete_tag_btn.setEnabled(has_selection)
 
-    def add_tag(self):
+    def refresh_tags(self):
 
-        from PySide6.QtWidgets import QInputDialog
-
-
-        if self.current_work is None:
+        if not hasattr(self, "current_work") or self.current_work is None:
             return
-
-
-        tag, ok = QInputDialog.getText(
-            self,
-            "Add Tag",
-            "Tag name:"
-        )
-
-
-        if ok and tag.strip():
-
-            self.work_service.add_tag_to_work(
-                self.current_work.id,
-                tag.strip()
-            )
-
-
-            # Refresh tags display
-            self.current_work.tags = self.work_service.get_work_tags(
-                self.current_work.id
-            )
-
-
-            self.tags.clear()
-
-
-            for t in self.current_work.tags:
-
-                self.tags.addItem(t)
-
-    def remove_tag(self):
-
-        if self.current_work is None:
-            return
-
-
-        item = self.tags.currentItem()
-
-
-        if item is None:
-            return
-
-
-        tag_name = item.text()
-
-
-        self.work_service.remove_tag_from_work(
-            self.current_work.id,
-            tag_name
-        )
-
-
-        # Refresh tags display
 
         self.current_work.tags = self.work_service.get_work_tags(
             self.current_work.id
         )
 
-
         self.tags.clear()
 
+        for tag in self.current_work.tags:
+            self.tags.addItem(tag)
 
-        for t in self.current_work.tags:
+        self.update_tag_buttons_state()
 
-            self.tags.addItem(t)
+    def add_tag(self):
+
+        if self.current_work is None:
+            return
+
+        tag, ok = QInputDialog.getText(
+            self,
+            "Add New Tag",
+            "Tag name:"
+        )
+
+        if ok and tag.strip():
+            self.work_service.add_tag_to_work(
+                self.current_work.id,
+                tag.strip()
+            )
+            self.refresh_tags()
+
+    def rename_tag(self):
+
+        if self.current_work is None:
+            return
+
+        item = self.tags.currentItem()
+
+        if item is None:
+            return
+
+        current_name = item.text().strip()
+        if not current_name:
+            return
+
+        new_name, ok = QInputDialog.getText(
+            self,
+            "Rename Tag",
+            "New tag name:",
+            text=current_name
+        )
+
+        if not ok:
+            return
+
+        new_name = new_name.strip()
+        if not new_name:
+            return
+
+        if new_name.lower() == current_name.lower():
+            return
+
+        tag_id = self.work_service.get_tag_id_by_name(current_name)
+        if tag_id is None:
+            return
+
+        if self.work_service.get_tag_id_by_name(new_name) is not None and self.work_service.get_tag_id_by_name(new_name) != tag_id:
+            reply = QMessageBox.question(
+                self,
+                "Duplicate Tag",
+                f"A tag named '{new_name}' already exists. Merge it into the existing tag?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+            if reply != QMessageBox.Yes:
+                return
+
+        self.work_service.rename_tag(tag_id, new_name)
+        self.refresh_tags()
+
+    def delete_tag(self):
+
+        if self.current_work is None:
+            return
+
+        item = self.tags.currentItem()
+
+        if item is None:
+            return
+
+        tag_name = item.text().strip()
+        if not tag_name:
+            return
+
+        reply = QMessageBox.question(
+            self,
+            "Delete Tag",
+            "Delete this tag from the selected work?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if reply != QMessageBox.Yes:
+            return
+
+        self.work_service.remove_tag_from_work(
+            self.current_work.id,
+            tag_name
+        )
+        self.refresh_tags()

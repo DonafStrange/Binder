@@ -23,6 +23,7 @@ from widgets.markdown_editor import MarkdownEditor
 from widgets.reference_library import ReferenceLibrary
 from widgets.reference_properties import ReferenceProperties
 from widgets.graph_canvas import GraphCanvas
+from widgets.graph_window import GraphWindow
 #from widgets.work_reference_panel import WorkReferencePanel
 
 from services.work_service import WorkService
@@ -472,7 +473,7 @@ class MainWindow(QMainWindow):
 
     def open_graph(self):
 
-        self.graph_window = GraphCanvas()
+        self.graph_window = GraphWindow()
 
         self.graph_window.setWindowTitle(
             "Work Connection Graph"

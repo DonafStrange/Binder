@@ -1,11 +1,6 @@
 {
     "nodes": [
         {
-            "id": "work_ccf546bf",
-            "label": "Computational Neuroscience: Mathematical Modelling of Brain Dynamics",
-            "type": "work"
-        },
-        {
             "id": "work_3d8b13f8",
             "label": "EEG Signal Processing: From Neural Recording to Computational Analysis",
             "type": "work"
@@ -100,34 +95,12 @@
             "type": "category"
         },
         {
-            "id": "category_514d2f23",
-            "label": "New Category",
-            "type": "category"
+            "id": "work_12df4a90",
+            "label": "Computational Neuroscience: Mathematical Modelling of Brain Dynamics",
+            "type": "work"
         }
     ],
     "edges": [
-        {
-            "source": "work_ccf546bf",
-            "target": "work_3763e4ec",
-            "relations": [
-                "shared_reference"
-            ],
-            "weight": 1
-        },
-        {
-            "source": "work_ccf546bf",
-            "target": "attachment_004ece77",
-            "relations": [
-                "attachment"
-            ]
-        },
-        {
-            "source": "work_ccf546bf",
-            "target": "attachment_6649a273",
-            "relations": [
-                "attachment"
-            ]
-        },
         {
             "source": "work_2f2021ce",
             "target": "attachment_70587970",
@@ -143,24 +116,8 @@
             ]
         },
         {
-            "source": "work_ccf546bf",
-            "target": "work_3d8b13f8",
-            "relations": [
-                "shared_reference"
-            ],
-            "weight": 1
-        },
-        {
             "source": "work_3763e4ec",
             "target": "work_3d8b13f8",
-            "relations": [
-                "shared_reference"
-            ],
-            "weight": 1
-        },
-        {
-            "source": "work_ccf546bf",
-            "target": "work_2f2021ce",
             "relations": [
                 "shared_reference"
             ],
@@ -197,13 +154,6 @@
             ]
         },
         {
-            "source": "work_ccf546bf",
-            "target": "reference_3a5e4e89",
-            "relations": [
-                "reference"
-            ]
-        },
-        {
             "source": "work_3763e4ec",
             "target": "reference_3a5e4e89",
             "relations": [
@@ -212,13 +162,6 @@
         },
         {
             "source": "work_3763e4ec",
-            "target": "reference_3f797b46",
-            "relations": [
-                "reference"
-            ]
-        },
-        {
-            "source": "work_ccf546bf",
             "target": "reference_3f797b46",
             "relations": [
                 "reference"
@@ -246,22 +189,8 @@
             ]
         },
         {
-            "source": "work_ccf546bf",
-            "target": "tag_ab0c9b79",
-            "relations": [
-                "tag"
-            ]
-        },
-        {
             "source": "work_3d8b13f8",
             "target": "tag_c23a5891",
-            "relations": [
-                "tag"
-            ]
-        },
-        {
-            "source": "work_ccf546bf",
-            "target": "category_d87f2ae0",
             "relations": [
                 "tag"
             ]
@@ -282,10 +211,10 @@
             ]
         },
         {
-            "source": "work_ccf546bf",
-            "target": "category_514d2f23",
+            "source": "work_12df4a90",
+            "target": "tag_ab0c9b79",
             "relations": [
-                "category"
+                "tag"
             ]
         },
         {
@@ -319,6 +248,13 @@
         {
             "source": "work_475f5144",
             "target": "category_59a47284",
+            "relations": [
+                "category"
+            ]
+        },
+        {
+            "source": "work_12df4a90",
+            "target": "category_d87f2ae0",
             "relations": [
                 "category"
             ]
