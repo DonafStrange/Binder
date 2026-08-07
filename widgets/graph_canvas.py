@@ -54,7 +54,7 @@ class GraphCanvas(QGraphicsView):
 
         self.edge_filters = {
 
-            "shared_reference": True,
+            "shared_reference": False,
 
             "reference": True,
 
@@ -299,6 +299,9 @@ class GraphCanvas(QGraphicsView):
     def create_edge_filters(self):
 
         for relation in self.edge_filters:
+
+            if relation == "shared_reference":
+                continue
 
             box = QCheckBox(
                 relation,

@@ -515,8 +515,6 @@ class MainWindow(QMainWindow):
 
     def open_reference(self, reference_id):
 
-#         print("MAIN WINDOW OPEN REFERENCE:", reference_id)
-
         references = self.reference_library.service.get_all_references()
 
 

@@ -95,46 +95,17 @@
             "type": "work"
         },
         {
-            "id": "category_8e9f39a8",
-            "label": "Test Category",
+            "id": "category_59a47284",
+            "label": "Neuro Imaging",
             "type": "category"
         },
         {
-            "id": "category_59a47284",
-            "label": "Neuro Imaging",
+            "id": "category_514d2f23",
+            "label": "New Category",
             "type": "category"
         }
     ],
     "edges": [
-        {
-            "source": "work_ccf546bf",
-            "target": "category_d87f2ae0",
-            "relations": [
-                "category",
-                "tag"
-            ]
-        },
-        {
-            "source": "work_3d8b13f8",
-            "target": "category_5136f7b7",
-            "relations": [
-                "category"
-            ]
-        },
-        {
-            "source": "work_2f2021ce",
-            "target": "category_d87f2ae0",
-            "relations": [
-                "category"
-            ]
-        },
-        {
-            "source": "work_3763e4ec",
-            "target": "category_c08a0f72",
-            "relations": [
-                "category"
-            ]
-        },
         {
             "source": "work_ccf546bf",
             "target": "work_3763e4ec",
@@ -289,8 +260,58 @@
             ]
         },
         {
+            "source": "work_ccf546bf",
+            "target": "category_d87f2ae0",
+            "relations": [
+                "tag"
+            ]
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "work_afb1195e",
+            "relations": [
+                "shared_reference"
+            ],
+            "weight": 1
+        },
+        {
             "source": "work_afb1195e",
-            "target": "category_8e9f39a8",
+            "target": "reference_ca75787a",
+            "relations": [
+                "reference"
+            ]
+        },
+        {
+            "source": "work_ccf546bf",
+            "target": "category_514d2f23",
+            "relations": [
+                "category"
+            ]
+        },
+        {
+            "source": "work_3d8b13f8",
+            "target": "category_5136f7b7",
+            "relations": [
+                "category"
+            ]
+        },
+        {
+            "source": "work_2f2021ce",
+            "target": "category_d87f2ae0",
+            "relations": [
+                "category"
+            ]
+        },
+        {
+            "source": "work_3763e4ec",
+            "target": "category_c08a0f72",
+            "relations": [
+                "category"
+            ]
+        },
+        {
+            "source": "work_afb1195e",
+            "target": "category_59a47284",
             "relations": [
                 "category"
             ]

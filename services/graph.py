@@ -509,58 +509,54 @@ class GraphService:
 
     def sync_category_connections(self):
 
-
         from services.work_service import WorkService
 
-
         work_service = WorkService()
-
         works = work_service.get_all_works()
 
+        current_category_names = {
+            work.category.strip()
+            for work in works
+            if work.category and work.category.strip()
+        }
+
+        self.graph["edges"] = [
+            edge
+            for edge in self.graph.get("edges", [])
+            if "category" not in edge.get("relations", [])
+        ]
+
+        self.graph["nodes"] = [
+            node
+            for node in self.graph.get("nodes", [])
+            if node.get("type") != "category"
+            or node.get("label") in current_category_names
+        ]
 
         for work in works:
-
-
             if not work.category:
                 continue
 
-
-            work_node = self.find_node(
-                work.title
-            )
-
-
+            work_node = self.find_node(work.title)
             if work_node is None:
                 continue
 
-
-            category_node = self.find_node(
-                work.category
-            )
-
-
+            category_node = self.find_node(work.category)
             if category_node is None:
-
-                category_id = self.add_category(
-                    work.category
-                )
-
+                category_id = self.add_category(work.category)
                 category_node = {
                     "id": category_id,
                     "label": work.category,
                     "type": "category"
                 }
 
-
             self.connect(
-
                 work_node["id"],
-
                 category_node["id"],
-
                 "category"
+            )
 
-            )        
+        self.save()
 
     # -------------------------------------------------
     # Sync Attachment Connections
