@@ -212,7 +212,7 @@ class MainWindow(QMainWindow):
         )
 
         dock = QDockWidget(
-            "References"
+            "All References"
         )
 
 
