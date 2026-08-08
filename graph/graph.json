@@ -98,6 +98,11 @@
             "id": "work_12df4a90",
             "label": "Computational Neuroscience: Mathematical Modelling of Brain Dynamics",
             "type": "work"
+        },
+        {
+            "id": "work_0341865f",
+            "label": "Guidebook",
+            "type": "work"
         }
     ],
     "edges": [
