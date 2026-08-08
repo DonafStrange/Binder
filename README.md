@@ -222,15 +222,7 @@ cd Binder
 
 ---
 
-# Create Virtual Environment (Recommended)
-
-Create an isolated Python environment:
-
-```bash
-python -m venv binderenv
-```
-
-Activate it.
+# Activate Virtual Environment (Recommended)
 
 ### Linux / macOS
 
